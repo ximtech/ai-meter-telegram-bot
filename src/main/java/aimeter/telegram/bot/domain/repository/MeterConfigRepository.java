@@ -12,17 +12,16 @@ import java.util.List;
 public interface MeterConfigRepository extends CrudRepository<AIMeterConfig, Long> {
     
     @Query("""
-        SELECT * FROM meter.ai_meter_config AS config
-        JOIN meter.ai_meter_device AS device ON config.id = device.config_id
+        SELECT * FROM ai_meter_config AS config
+        JOIN ai_meter_device AS device ON config.id = device.config_id
         AND device.id = :id
         AND device.deleted IS FALSE""")
     AIMeterConfig findMeterConfigByMeterId(@Param("id") long meterId);
 
     @Query("""
-        SELECT * FROM meter.ai_meter_config AS config
-        JOIN meter.ai_meter_device AS device ON config.id = device.config_id
+        SELECT * FROM ai_meter_config AS config
+        JOIN ai_meter_device AS device ON config.id = device.config_id
         AND device.id IN (:meterIds)
         AND device.deleted IS FALSE""")
     List<AIMeterConfig> findConfigsByMeterIds(@Param("meterIds") List<Long> meterIds);
-
 }

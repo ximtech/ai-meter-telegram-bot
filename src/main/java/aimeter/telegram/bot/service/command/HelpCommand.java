@@ -1,12 +1,11 @@
 package aimeter.telegram.bot.service.command;
 
+import aimeter.telegram.bot.service.MessageHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-import static aimeter.telegram.bot.utils.MessageConstants.HELP_MESSAGE;
 
 @Slf4j
 @Component
@@ -19,9 +18,14 @@ public class HelpCommand implements Command {
     }
 
     @Override
-    public SendMessage apply(Update update) {
+    public String description() {
+        return "help.command.description";
+    }
+
+    @Override
+    public SendMessage apply(MessageHandler messageHandler, Update update) {
         long chatId = update.getMessage().getChatId();
         log.info("Meters command help for chat id: [{}]", chatId);
-        return new SendMessage(String.valueOf(chatId), HELP_MESSAGE);
+        return new SendMessage(String.valueOf(chatId), messageHandler.formatHelpMessage(chatId));
     }
 }

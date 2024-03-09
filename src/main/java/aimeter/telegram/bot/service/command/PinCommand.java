@@ -6,6 +6,7 @@ import aimeter.telegram.bot.domain.entity.AIMeterToken;
 import aimeter.telegram.bot.domain.repository.MeterConfigRepository;
 import aimeter.telegram.bot.domain.repository.MeterSubscriptionRepository;
 import aimeter.telegram.bot.domain.repository.OTPTokenRepository;
+import aimeter.telegram.bot.service.MessageHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,12 +17,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-
-import static aimeter.telegram.bot.utils.MessageConstants.INVALID_PIN_ENTERED;
-import static aimeter.telegram.bot.utils.MessageConstants.METER_ALREADY_SUBSCRIBED;
-import static aimeter.telegram.bot.utils.MessageConstants.PIN_EXPIRED;
-import static aimeter.telegram.bot.utils.MessageConstants.PIN_NOT_FOUND;
-import static aimeter.telegram.bot.utils.MessageConstants.SUBSCRIPTION_SUCCESS_MESSAGE;
 
 @Slf4j
 @Component
@@ -40,26 +35,31 @@ public class PinCommand implements Command {
     }
 
     @Override
+    public String description() {
+        return "pin.command.description";
+    }
+
+    @Override
     @Transactional
-    public SendMessage apply(Update update) {
+    public SendMessage apply(MessageHandler messageHandler, Update update) {
         long chatId = update.getMessage().getChatId();
         log.info("Pin command started for chat id: [{}]", chatId);
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(String.valueOf(chatId));
+        sendMessage.setChatId(chatId);
         
         String pinString = StringUtils.substringAfter(update.getMessage().getText(), name()).trim();
         log.info("PIN entered: [{}]", pinString);
         Integer pinNumber = parsePinNumber(pinString);
         if (pinNumber == null) {
             log.warn("Invalid pin number entered");
-            sendMessage.setText(INVALID_PIN_ENTERED);
+            sendMessage.setText(messageHandler.getMessage(chatId, "bot.answer.pin.invalid"));
             return sendMessage;
         }
 
        Optional<AIMeterToken> meterTokenOptional = otpTokenRepository.findAIMeterOTP(pinNumber);
         if (meterTokenOptional.isEmpty()) {
             log.warn("Not existing OTP entered");
-            sendMessage.setText(PIN_NOT_FOUND);
+            sendMessage.setText(messageHandler.getMessage(chatId, "bot.answer.pin.notfound"));
             return sendMessage;
         }
         
@@ -69,14 +69,14 @@ public class PinCommand implements Command {
             AIMeterConfig meterConfig = meterConfigRepository.findMeterConfigByMeterId(meterSubscriptionOptional.get().getMeterId());
             log.warn("Meter already subscribed: {}", meterConfig.getDeviceName());
             sendMessage.enableHtml(true);
-            sendMessage.setText(METER_ALREADY_SUBSCRIBED.formatted(meterConfig.getDeviceName()));
+            sendMessage.setText(messageHandler.getMessage(chatId, "bot.answer.already.subscribed", meterConfig.getDeviceName()));
             return sendMessage;
         }
         
         if (meterToken.getExpiresIn().isBefore(LocalDateTime.now())) {
             log.warn("Expired OTP entered");
             otpTokenRepository.delete(meterToken);
-            sendMessage.setText(PIN_EXPIRED);
+            sendMessage.setText(messageHandler.getMessage(chatId, "bot.answer.pin.expired"));
             return sendMessage;
         }
         
@@ -86,7 +86,7 @@ public class PinCommand implements Command {
 
         AIMeterConfig meterConfig = meterConfigRepository.findMeterConfigByMeterId(meterToken.getMeterId());
         sendMessage.enableHtml(true);
-        sendMessage.setText(SUBSCRIPTION_SUCCESS_MESSAGE.formatted(meterConfig.getDeviceName()));
+        sendMessage.setText(messageHandler.getMessage(chatId, "bot.answer.meter.subscribed", meterConfig.getDeviceName()));
         log.info("Subscription successfully created for meter: [{}]", meterConfig.getDeviceName());
         return sendMessage;
     }

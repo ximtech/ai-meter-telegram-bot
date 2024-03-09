@@ -21,7 +21,7 @@ public class JsonHandler {
             return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             log.error(e.getMessage());
-            return MessageConstants.ERROR;
+            return null;
         }
     }
 

@@ -21,6 +21,10 @@ spring:
     active: ${PROFILE:dev}
   main:
     allow-bean-definition-overriding: false
+  messages:
+    basename: messages
+    fallback-to-system-locale: false
+    encoding: UTF-8
 
   datasource:
     hikari:

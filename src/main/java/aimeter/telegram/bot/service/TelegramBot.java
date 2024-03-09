@@ -1,6 +1,5 @@
 package aimeter.telegram.bot.service;
 
-import aimeter.telegram.bot.utils.MessageConstants;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -13,17 +12,14 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class TelegramBot extends TelegramLongPollingBot {
 
     final String botName;
-    final CommandsHandler commandsHandler;
-    final CallbackHandler callbacksHandler;
+    final CommandHandler commandHandler;
+    final CallbackHandler callbackHandler;
 
-    public TelegramBot(String botName, 
-                       String botToken, 
-                       CommandsHandler commandsHandler, 
-                       CallbackHandler callbacksHandler) {
+    public TelegramBot(String botName, String botToken, CommandHandler commandHandler, CallbackHandler callbackHandler) {
         super(botToken);
         this.botName = botName;
-        this.commandsHandler = commandsHandler;
-        this.callbacksHandler = callbacksHandler;
+        this.commandHandler = commandHandler;
+        this.callbackHandler = callbackHandler;
     }
 
     @Override
@@ -35,22 +31,22 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String chatId = update.getMessage().getChatId().toString();
-            
+
             if (update.getMessage().getText().startsWith("/")) {
-                sendMessage(commandsHandler.handleCommands(update));
-            } else {
-                sendMessage(new SendMessage(chatId, MessageConstants.CANT_UNDERSTAND));
+                sendMessage(commandHandler.handleCommands(update));
+                return;
             }
-            
+            String errorMessage = commandHandler.getMessageHandler().getMessage(update.getMessage().getChatId(), "bot.answer.cant.understand");
+            sendMessage(new SendMessage(chatId, errorMessage));
+
         } else if (update.hasCallbackQuery()) {
-            sendMessage(callbacksHandler.handleCallbacks(update));
+            sendMessage(callbackHandler.handleCallbacks(update));
         }
     }
 
     private void sendMessage(SendMessage sendMessage) {
         try {
             execute(sendMessage);
-            log.info("Reply successfully sent");
         } catch (TelegramApiException e) {
             log.error(e.getMessage());
         }

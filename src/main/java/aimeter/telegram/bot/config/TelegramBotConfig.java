@@ -1,6 +1,7 @@
 package aimeter.telegram.bot.config;
 
-import aimeter.telegram.bot.service.CommandsHandler;
+import aimeter.telegram.bot.service.CallbackHandler;
+import aimeter.telegram.bot.service.CommandHandler;
 import aimeter.telegram.bot.service.TelegramBot;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +17,8 @@ public class TelegramBotConfig {
     String telegramBotToken;
     
     @Bean
-    public TelegramBot telegramBot(CommandsHandler commandsHandler) {
-        return new TelegramBot(telegramBotName, telegramBotToken, commandsHandler, null);
+    public TelegramBot telegramBot(CommandHandler commandHandler, CallbackHandler callbackHandler) {
+        return new TelegramBot(telegramBotName, telegramBotToken, commandHandler, callbackHandler);
     }
 
 }
