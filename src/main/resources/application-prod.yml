@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: ${AI_METER_DB_URL}
+    username: ${AI_METER_DB_USERNAME}
+    password: ${AI_METER_DB_PASSWORD}
+
+logging:
+  config: classpath:logging/log4j-prod.yaml

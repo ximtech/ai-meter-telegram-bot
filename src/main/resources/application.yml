@@ -1,0 +1,55 @@
+info:
+  build:
+    version: ${version}
+  app:
+    name: AI Meter Telegram Bot
+    description: Worker Documentation
+    active-profile: ${spring.profiles.active}
+    dev-description: Worker application that handles messaging with bot
+    dev-link: https://github.com/ximtech/ai-meter-telegram-bot
+
+server:
+  port: ${PORT:8095}
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: "ai-meter-telegram-bot"
+  profiles:
+    active: ${PROFILE:dev}
+  main:
+    allow-bean-definition-overriding: false
+
+  datasource:
+    hikari:
+      minimum-idle: 1
+      idle-timeout: 10000
+      maximumPoolSize: 2
+      schema: ${SCHEMA_NAME:meter}
+
+# actuator
+management:
+  endpoint.health.show-details: always
+  info:
+    env:
+      enabled: true
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: info, health
+    jmx:
+      exposure:
+        exclude: "*"
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+
+telegram:
+  bot:
+    name: AiMeter_bot
+    token: ${TELEGRAM_BOT_TOKEN}

@@ -1,0 +1,14 @@
+server:
+  error:
+    include-stacktrace: always
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:60716/ai-meter-db
+    username: myuser
+    password: secret
+
+logging:
+  config: classpath:logging/log4j-dev.yaml
+  level:
+    org.thymeleaf: INFO

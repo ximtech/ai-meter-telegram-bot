@@ -1,0 +1,9 @@
+spring:
+  sql:
+    init:
+      mode: always
+  main:
+    allow-bean-definition-overriding: true
+  groovy:
+    template:
+      check-template-location: false
