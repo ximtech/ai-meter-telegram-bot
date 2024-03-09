@@ -7,3 +7,8 @@ spring:
   groovy:
     template:
       check-template-location: false
+
+telegram:
+  bot:
+    name: AiMeter_bot
+    token: test_token_87368129723940809385459
