@@ -7,7 +7,7 @@ Spring Boot application that helps create AI Meter user subscriptions and send m
 ## TODO:
 
 - Bot description ⬜
-- Heroku deployment ⬜
+- Heroku deployment ✅
 - Integration tests ⬜
 
 ### Heroku CLI commands
