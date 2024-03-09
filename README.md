@@ -1,5 +1,7 @@
 # ai-meter-telegram-bot
 
+[![build](https://github.com/ximtech/ai-meter-telegram-bot/actions/workflows/build.yml/badge.svg)](https://github.com/ximtech/ai-meter-telegram-bot/actions/workflows/build.yml)
+
 Spring Boot application that helps create AI Meter user subscriptions and send meter readings to channel 
 
 ## TODO:

@@ -33,7 +33,7 @@ jar {
 }
 
 bootJar {
-    archivesBaseName = 'ai-meter-proxima'
+    archivesBaseName = 'ai-meter-telegram-bot'
 }
 
 springBoot {

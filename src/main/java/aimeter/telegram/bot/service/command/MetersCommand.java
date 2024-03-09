@@ -48,8 +48,8 @@ public class MetersCommand implements Command {
 
         AtomicInteger counter = new AtomicInteger(1);
         String meterNamesFormatted = meterConfigRepository.findConfigsByMeterIds(subscriptionIds).stream()
-                .map((AIMeterConfig deviceConfig) -> "%d. <b>%s</b>%n".formatted(counter.getAndIncrement(), deviceConfig.getDeviceName())).collect(Collectors.joining());
-
+                .map((AIMeterConfig deviceConfig) -> "%d. <b>%s</b>%n".formatted(counter.getAndIncrement(), deviceConfig.getDeviceName()))
+                .collect(Collectors.joining());
         sendMessage.setText(meterNamesFormatted);
         return sendMessage;
     }
