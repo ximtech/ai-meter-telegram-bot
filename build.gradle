@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'ai-meter-telegram.bot'
-version = '1.0.0'
+version = '1.1.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -34,6 +34,14 @@ jar {
 
 bootJar {
     archivesBaseName = 'ai-meter-telegram-bot'
+    fileTree("${project.projectDir}").matching {    // update jar version in Procfile
+        include "Procfile"
+    }.each {
+        ant.replaceregexp(
+                file: it,
+                match: "${archivesBaseName}-\\d+\\.\\d+\\.\\d+\\.jar",
+                replace: "${archivesBaseName}-${project.version}.jar")
+    }
 }
 
 springBoot {
