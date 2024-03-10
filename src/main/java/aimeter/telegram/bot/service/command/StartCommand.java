@@ -70,13 +70,8 @@ public class StartCommand implements Command {
     private Set<String> getAvailableLangNames() {
         return resources.stream()
                 .map((Resource resource) -> {
-                    String langName = StringUtils.substringBetween(getResourceFileName(resource), "messages_", ".properties");
+                    String langName = StringUtils.substringBetween(resource.getFilename(), "messages_", ".properties");
                     return StringUtils.isBlank(langName) ? MessageHandler.DEFAULT_LANG : langName.trim();
                 }).collect(Collectors.toSet());
-    }
-    
-    @SneakyThrows
-    private String getResourceFileName(Resource resource) {
-        return resource.getFile().getName();
     }
 }
