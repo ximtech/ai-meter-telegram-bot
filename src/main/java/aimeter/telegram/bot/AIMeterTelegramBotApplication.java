@@ -24,7 +24,7 @@ public class AIMeterTelegramBotApplication {
         SpringApplication.run(AIMeterTelegramBotApplication.class, args);
     }
 
-    @Scheduled(cron = "0 */10 * ? * *")
+    @Scheduled(cron = "0 */20 * ? * *")
     public void deleteExpiredOTPsEveryTenMinutes() {
         log.info("Delete expired OTP started at: {}", LocalDateTime.now());
         long deletedTokensCount = otpTokenRepository.deleteAllExpiredTokens(LocalDateTime.now());
