@@ -13,7 +13,7 @@ Spring Boot application that helps create AI Meter user subscriptions and send m
 ### Heroku CLI commands
 
 - `heroku login`
-- `heroku create --app ai-meter-proxima --region eu`
+- `heroku create --app ai-meter-telegram-bot --region eu`
 - `git push heroku main`
 - `heroku ps`
 - `heroku logs --tail`
