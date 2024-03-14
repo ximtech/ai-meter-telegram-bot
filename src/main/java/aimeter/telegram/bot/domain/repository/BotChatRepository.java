@@ -16,7 +16,8 @@ public interface BotChatRepository extends CrudRepository<AIMeterBotChat, Long> 
     @Cacheable(value = "userLang", key = "#chatId")
     @Query("""
         SELECT botChat.user_language FROM ai_meter_bot_chat AS botChat
-        WHERE botChat.chat_id = :chatId""")
+        WHERE botChat.chat_id = :chatId
+        AND botChat.chat_type='""" + AIMeterBotChat.CHAT_TYPE_NAME + "'")
     Optional<String> findUserSelectedLanguage(@Param("chatId") long chatId);
     
     Optional<AIMeterBotChat> findAIMeterBotChatByChatId(long chatId);
@@ -25,6 +26,7 @@ public interface BotChatRepository extends CrudRepository<AIMeterBotChat, Long> 
     @Query("""
         UPDATE ai_meter_bot_chat
         SET user_language = :lang
-        WHERE chat_id = :chatId""")
+        WHERE chat_id = :chatId
+        AND chat_type='""" + AIMeterBotChat.CHAT_TYPE_NAME + "'")
     void updateUserLanguage(@Param("chatId") long chatId, @Param("lang") String lang);
 }

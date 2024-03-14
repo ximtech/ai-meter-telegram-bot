@@ -25,7 +25,6 @@ spring:
     basename: messages
     fallback-to-system-locale: false
     encoding: UTF-8
-
   datasource:
     hikari:
       minimum-idle: 1
